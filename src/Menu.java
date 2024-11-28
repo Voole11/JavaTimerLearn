@@ -8,6 +8,7 @@ public class Menu {
     private int totalShutDownTimeMills;
     private boolean running;
 
+
     public static void main(String[] args) {
         Menu menu = new Menu();
         menu.showStartMenu();
@@ -49,13 +50,13 @@ public class Menu {
         return totalShutDownTimeMills;
     }
 
-    public void setTotalShutDownTimeMills(int totalShutDownTimeMills) {
-        this.totalShutDownTimeMills = totalShutDownTimeMills;
+    public void setTotalShutDownTimeMills(int shutdownHours, int shutdownMinutes, int shutdownSeconds) {
+        this.totalShutDownTimeMills = 1000 * (shutdownHours * 3600 + shutdownMinutes * 60 + shutdownSeconds);
     }
 
     public void showStartMenu() {
-        String currentTime = String.format("Установленное время: %d часов, %d минут %d секунд\n",
-                getShutdownHours(), getShutdownMinutes(), getShutdownSeconds());
+
+         setTotalShutDownTimeMills(getShutdownHours(), getShutdownMinutes(), getShutdownSeconds());
 
         Scanner scanner = new Scanner(System.in);
         int choice = -1;
@@ -63,14 +64,15 @@ public class Menu {
         while (choice != 0) {
             System.out.println("////////////////////////////////////////");
             System.out.println(getTotalShutDownTimeMills() + " миллисекунд");
-            System.out.print(currentTime);
+            System.out.printf("Установленное время: %d часов %d минут %d секунд\n", getShutdownHours(), getShutdownMinutes(), getShutdownSeconds());
             System.out.println("////////////////////////////////////////");
             System.out.println("[1] - Часы");
             System.out.println("[2] - Минуты");
             System.out.println("[3] - Секунды");
             System.out.println("[4] - Старт");
             System.out.println("[5] - Отмена");
-            System.out.println("[6] - Показать оставшееся время");
+            System.out.println("[6] - Обновить");
+            System.out.println("[7] - Обнулить таймер");
             System.out.println("[0] - Выход");
             System.out.println("Нажмите клавишу для взаимодействия: ");
             System.out.println("////////////////////////////////////////");
@@ -89,6 +91,8 @@ public class Menu {
                 stopTimer();
             }else if (choice == 6) {
                 showCurrentTime();
+            }else if (choice == 7) {
+                nullCurrentTime();
             }else if (choice == 0) {
                 System.out.println("Выход из программы");
             } else {
@@ -112,7 +116,7 @@ public class Menu {
                 showStartMenu();
                 break;
             } else if (choise > 0 && choise < 60){
-                setTotalShutDownTimeMills(getTotalShutDownTimeMills() - (getShutdownHours() * 36000000));
+                setTotalShutDownTimeMills(getTotalShutDownTimeMills() - (getShutdownHours() * 36000000), 0, 0);
                 setShutdownHours(0);
                 shutdownHoursTemp = shutdownHoursTemp + choise;
                 setShutdownHours(shutdownHoursTemp);
@@ -142,7 +146,7 @@ public class Menu {
                 showStartMenu();
                 break;
             } else if (choise > 0 && choise < 60){
-                setTotalShutDownTimeMills(getTotalShutDownTimeMills() - getShutdownMinutes() * 60000);
+                setTotalShutDownTimeMills(0, getTotalShutDownTimeMills() - getShutdownMinutes() * 60000, 0);
                 setShutdownMinutes(0);
                 shutdownMinutesTemp = shutdownMinutesTemp + choise;
                 setShutdownMinutes(shutdownMinutesTemp);
@@ -172,7 +176,7 @@ public class Menu {
                 showStartMenu();
                 break;
             } else if (choise > 0 && choise < 99){
-                setTotalShutDownTimeMills(getTotalShutDownTimeMills() - getShutdownSeconds() * 1000);
+                setTotalShutDownTimeMills(0,0, getTotalShutDownTimeMills() - getShutdownSeconds() * 1000);
                 setShutdownSeconds(0);
                 shutdownSecondssTemp = shutdownSecondssTemp + choise;
                 setShutdownSeconds(shutdownSecondssTemp);
@@ -197,9 +201,13 @@ public class Menu {
         timer.cmdShutdownTimerCancel();
     }
 
-    public void showCurrentTime(){
-        System.out.println("До выключения компьютера осталось: ");
-        System.out.println(getShutdownHours() + " часов " + getShutdownMinutes() + " минут " + getShutdownSeconds() + " секунд");
+    public void showCurrentTime(){}
+
+    public void nullCurrentTime(){
+        setTotalShutDownTimeMills(0,0,0);
+        setShutdownHours(0);
+        setShutdownMinutes(0);
+        setShutdownSeconds(0);
     }
 
 
