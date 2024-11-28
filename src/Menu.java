@@ -1,5 +1,6 @@
+import java.sql.Time;
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
+import java.util.Timer;
 
 public class Menu {
     private int shutdownHours;
@@ -56,9 +57,11 @@ public class Menu {
 
     public void showStartMenu() {
 
-         setTotalShutDownTimeMills(getShutdownHours(), getShutdownMinutes(), getShutdownSeconds());
+        setTotalShutDownTimeMills(getShutdownHours(), getShutdownMinutes(), getShutdownSeconds());
 
         Scanner scanner = new Scanner(System.in);
+        MyTimer timer = new MyTimer(getTotalShutDownTimeMills());
+
         int choice = -1;
 
         while (choice != 0) {
@@ -90,7 +93,7 @@ public class Menu {
             }else if (choice == 5) {
                 stopTimer();
             }else if (choice == 6) {
-                showCurrentTime();
+                timer.showTime();
             }else if (choice == 7) {
                 nullCurrentTime();
             }else if (choice == 0) {
@@ -191,17 +194,20 @@ public class Menu {
         scanner.close();
     }
 
+    Timer timerUtill = new Timer();
+    MyTimer myT = new MyTimer();
+
     public void startTimer(){
-        Timer timer = new Timer();
-        timer.cmdShutdownTimerStart(getTotalShutDownTimeMills());
+        MyTimer timer = new MyTimer();
+        timer.cmdShutdownTimerStart(getTotalShutDownTimeMills() / 1000);
+        timerUtill.schedule(myT, 0, 1000);
     }
 
     public void stopTimer(){
-        Timer timer = new Timer();
+        MyTimer timer = new MyTimer();
         timer.cmdShutdownTimerCancel();
+        timerUtill.cancel();
     }
-
-    public void showCurrentTime(){}
 
     public void nullCurrentTime(){
         setTotalShutDownTimeMills(0,0,0);
@@ -209,30 +215,4 @@ public class Menu {
         setShutdownMinutes(0);
         setShutdownSeconds(0);
     }
-
-
-
-
-//    public void timer(){
-//        boolean x=true;
-//        long displayMinutes=0;
-//        long starttime=System.currentTimeMillis();
-//        System.out.println("Timer:");
-//        while(x)
-//        {
-//            TimeUnit.SECONDS.sleep(1);
-//            long timepassed=System.currentTimeMillis()-starttime;
-//            long secondspassed=timepassed/1000;
-//            if(secondspassed==60)
-//            {
-//                secondspassed=0;
-//                starttime=System.currentTimeMillis();
-//            }
-//            if((secondspassed%60)==0)
-//                displayMinutes++;
-//
-//            System.out.println(displayMinutes+":"+secondspassed);
-//        }
-//    }
-
 }
