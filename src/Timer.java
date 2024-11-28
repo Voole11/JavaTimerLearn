@@ -1,5 +1,5 @@
 public class Timer {
-    public void cmdShutdownTime(int shutdownTime){
+    public void cmdShutdownTimerStart(int shutdownTime){
         try {
             String command = String.format("shutdown /s /t %d", shutdownTime);
 
@@ -10,7 +10,7 @@ public class Timer {
             e.printStackTrace();
         }
     }
-    public void cmdShutdownCancel(){
+    public void cmdShutdownTimerCancel(){
         try{
             String command = "shutdown -a";
             Process process = Runtime.getRuntime().exec(command);

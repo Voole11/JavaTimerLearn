@@ -20,11 +20,11 @@ public class Menu {
     }
 
     public void setShutdownMinutes(int mins){
-        this.shutdownHours = mins;
+        this.shutdownMinutes = mins;
     }
 
     public void setShutdownSeconds(int secs){
-        this.shutdownHours = secs;
+        this.shutdownSeconds = secs;
     }
 
     public int getShutdownHours(){
@@ -48,10 +48,11 @@ public class Menu {
     }
 
     public void showStartMenu() {
-//        String currentTime = String.format("Таймер сработает через: %d часов, %d минут %d секунд\n",
-//                getShutdownHours(), getShutdownMinutes(), getShutdownSeconds());
+        String currentTime = String.format("Таймер сработает через: %d часов, %d минут %d секунд\n",
+                getShutdownHours(), getShutdownMinutes(), getShutdownSeconds());
 
         System.out.println(getTotalShutDownTimeMills());
+        System.out.println(currentTime);
 
         Scanner scanner = new Scanner(System.in);
         int choice = -1;
@@ -60,6 +61,8 @@ public class Menu {
             System.out.println("[1] - Часы");
             System.out.println("[2] - Минуты");
             System.out.println("[3] - Секунды");
+            System.out.println("[4] - Старт");
+            System.out.println("[5] - Отмена");
             System.out.println("[0] - Выход");
             System.out.println("Нажмите клавишу для взаимодействия: ");
 
@@ -71,7 +74,11 @@ public class Menu {
                 showSecondMenu();
             } else if (choice == 3) {
                 showThirdMenu();
-            } else if (choice == 0) {
+            }else if (choice == 4) {
+                startTimer();
+            }else if (choice == 5) {
+                stopTimer();
+            }else if (choice == 0) {
                 System.out.println("Выход из программы");
             } else {
                 System.out.println("Некорректный выбор, попробуйте снова.");
@@ -86,7 +93,7 @@ public class Menu {
         while (choise != 0){
             System.out.println("Введите количество часов, через которое компьютер выключится: ");
             System.out.println("[0] - Назад");
-            int shutdownHoursM = 0;
+            int shutdownHoursTemp = 0;
 
             choise = scanner.nextInt();
 
@@ -94,11 +101,10 @@ public class Menu {
                 showStartMenu();
                 break;
             } else if (choise > 0 && choise < 99){
+                setTotalShutDownTimeMills(getTotalShutDownTimeMills() - (getShutdownHours() * 36000000));
                 setShutdownHours(0);
-                setTotalShutDownTimeMills(0);
-                shutdownHoursM = shutdownHoursM + choise;
-                setShutdownHours(shutdownHoursM);
-                setTotalShutDownTimeMills(shutdownHoursM);
+                shutdownHoursTemp = shutdownHoursTemp + choise;
+                setShutdownHours(shutdownHoursTemp);
                 showStartMenu();
                 scanner.close();
             } else if (choise > 99) {
@@ -117,7 +123,7 @@ public class Menu {
         while (choise != 0){
             System.out.println("Введите количество минут, через которое компьютер выключится: ");
             System.out.println("[0] - Назад");
-            int shutdownMinutesM = 0;
+            int shutdownMinutesTemp = 0;
 
             choise = scanner.nextInt();
 
@@ -125,10 +131,10 @@ public class Menu {
                 showStartMenu();
                 break;
             } else if (choise > 0 && choise < 99){
+                setTotalShutDownTimeMills(getTotalShutDownTimeMills() - getShutdownMinutes() * 60000);
                 setShutdownMinutes(0);
-                setTotalShutDownTimeMills(0);
-                shutdownMinutesM = shutdownMinutesM + choise;
-                setShutdownMinutes(shutdownMinutesM);
+                shutdownMinutesTemp = shutdownMinutesTemp + choise;
+                setShutdownMinutes(shutdownMinutesTemp);
                 showStartMenu();
                 scanner.close();
             } else if (choise > 99) {
@@ -147,7 +153,7 @@ public class Menu {
         while (choise != 0){
             System.out.println("Введите количество секунд, через которое компьютер выключится: ");
             System.out.println("[0] - Назад");
-            int shutdownSecondsM = 0;
+            int shutdownSecondssTemp = 0;
 
             choise = scanner.nextInt();
 
@@ -155,9 +161,10 @@ public class Menu {
                 showStartMenu();
                 break;
             } else if (choise > 0 && choise < 99){
+                setTotalShutDownTimeMills(getTotalShutDownTimeMills() - getShutdownSeconds() * 1000);
                 setShutdownSeconds(0);
-                shutdownSecondsM = shutdownSecondsM + choise;
-                setShutdownSeconds(shutdownSecondsM);
+                shutdownSecondssTemp = shutdownSecondssTemp + choise;
+                setShutdownSeconds(shutdownSecondssTemp);
                 showStartMenu();
                 scanner.close();
             } else if (choise > 99) {
@@ -168,6 +175,19 @@ public class Menu {
         }
         scanner.close();
     }
+
+    public void startTimer(){
+        Timer timer = new Timer();
+        timer.cmdShutdownTimerStart(getTotalShutDownTimeMills());
+    }
+
+    public void stopTimer(){
+        Timer timer = new Timer();
+        timer.cmdShutdownTimerCancel();
+    }
+
+
+
 
 //    public void timer(){
 //        boolean x=true;
