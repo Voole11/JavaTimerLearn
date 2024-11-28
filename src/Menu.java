@@ -8,6 +8,12 @@ public class Menu {
     private int totalShutDownTimeMills;
     private boolean running;
 
+    public static void main(String[] args) {
+        Menu menu = new Menu();
+        menu.showStartMenu();
+    }
+
+
     public Menu(){
         this.shutdownHours = 0;
         this.shutdownMinutes = 0;
@@ -48,23 +54,26 @@ public class Menu {
     }
 
     public void showStartMenu() {
-        String currentTime = String.format("Таймер сработает через: %d часов, %d минут %d секунд\n",
+        String currentTime = String.format("Установленное время: %d часов, %d минут %d секунд\n",
                 getShutdownHours(), getShutdownMinutes(), getShutdownSeconds());
-
-        System.out.println(getTotalShutDownTimeMills());
-        System.out.println(currentTime);
 
         Scanner scanner = new Scanner(System.in);
         int choice = -1;
 
         while (choice != 0) {
+            System.out.println("////////////////////////////////////////");
+            System.out.println(getTotalShutDownTimeMills() + " миллисекунд");
+            System.out.print(currentTime);
+            System.out.println("////////////////////////////////////////");
             System.out.println("[1] - Часы");
             System.out.println("[2] - Минуты");
             System.out.println("[3] - Секунды");
             System.out.println("[4] - Старт");
             System.out.println("[5] - Отмена");
+            System.out.println("[6] - Показать оставшееся время");
             System.out.println("[0] - Выход");
             System.out.println("Нажмите клавишу для взаимодействия: ");
+            System.out.println("////////////////////////////////////////");
 
             choice = scanner.nextInt();
 
@@ -78,6 +87,8 @@ public class Menu {
                 startTimer();
             }else if (choice == 5) {
                 stopTimer();
+            }else if (choice == 6) {
+                showCurrentTime();
             }else if (choice == 0) {
                 System.out.println("Выход из программы");
             } else {
@@ -100,15 +111,15 @@ public class Menu {
             if (choise == 0){
                 showStartMenu();
                 break;
-            } else if (choise > 0 && choise < 99){
+            } else if (choise > 0 && choise < 60){
                 setTotalShutDownTimeMills(getTotalShutDownTimeMills() - (getShutdownHours() * 36000000));
                 setShutdownHours(0);
                 shutdownHoursTemp = shutdownHoursTemp + choise;
                 setShutdownHours(shutdownHoursTemp);
                 showStartMenu();
                 scanner.close();
-            } else if (choise > 99) {
-                System.out.println("Количество часов не должно быть меньше 0 и больше 99");
+            } else if (choise > 59) {
+                System.out.println("Количество часов не должно быть меньше 0 и больше 59");
             } else{
                 System.out.println("Некорректный выбор, попробуйте снова.");
             }
@@ -130,15 +141,15 @@ public class Menu {
             if (choise == 0){
                 showStartMenu();
                 break;
-            } else if (choise > 0 && choise < 99){
+            } else if (choise > 0 && choise < 60){
                 setTotalShutDownTimeMills(getTotalShutDownTimeMills() - getShutdownMinutes() * 60000);
                 setShutdownMinutes(0);
                 shutdownMinutesTemp = shutdownMinutesTemp + choise;
                 setShutdownMinutes(shutdownMinutesTemp);
                 showStartMenu();
                 scanner.close();
-            } else if (choise > 99) {
-                System.out.println("Количество минут не должно быть меньше 0 и больше 99");
+            } else if (choise > 59) {
+                System.out.println("Количество минут не должно быть меньше 0 и больше 59");
             } else{
                 System.out.println("Некорректный выбор, попробуйте снова.");
             }
@@ -184,6 +195,11 @@ public class Menu {
     public void stopTimer(){
         Timer timer = new Timer();
         timer.cmdShutdownTimerCancel();
+    }
+
+    public void showCurrentTime(){
+        System.out.println("До выключения компьютера осталось: ");
+        System.out.println(getShutdownHours() + " часов " + getShutdownMinutes() + " минут " + getShutdownSeconds() + " секунд");
     }
 
 
