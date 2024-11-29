@@ -13,6 +13,11 @@ public class Menu {
     public static void main(String[] args) {
         Menu menu = new Menu();
         menu.showStartMenu();
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("Программа завершает свою работу");
+            menu.stopTimer();
+        }));
+
     }
 
 
@@ -74,7 +79,7 @@ public class Menu {
             System.out.println("[3] - Секунды");
             System.out.println("[4] - Старт");
             System.out.println("[5] - Отмена");
-            System.out.println("[6] - Обновить");
+            System.out.println("[6] - Показать оставшееся время");
             System.out.println("[7] - Обнулить таймер");
             System.out.println("[0] - Выход");
             System.out.println("Нажмите клавишу для взаимодействия: ");
@@ -98,6 +103,8 @@ public class Menu {
                 nullCurrentTime();
             }else if (choice == 0) {
                 System.out.println("Выход из программы");
+                stopTimer();
+                System.exit(0);
             } else {
                 System.out.println("Некорректный выбор, попробуйте снова.");
             }
@@ -186,7 +193,7 @@ public class Menu {
                 showStartMenu();
                 scanner.close();
             } else if (choise > 99) {
-                System.out.println("Количество секунд не должно быть меньше 0 и больше 99");
+                System.out.println("Количество секунд не должно быть меньше 0 и больше 59");
             } else{
                 System.out.println("Некорректный выбор, попробуйте снова.");
             }
@@ -200,7 +207,6 @@ public class Menu {
     public void startTimer(){
         MyTimer timer = new MyTimer();
         timer.cmdShutdownTimerStart(getTotalShutDownTimeMills() / 1000);
-        timerUtill.schedule(myT, 0, 1000);
     }
 
     public void stopTimer(){
