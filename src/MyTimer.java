@@ -1,7 +1,7 @@
-import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
+import java.util.Timer;
 
-public class MyTimer extends TimerTask {
+
+public class MyTimer  {
     private int seconds;
 
     public int getSeconds(){
@@ -37,16 +37,6 @@ public class MyTimer extends TimerTask {
         }
     }
 
-    @Override
-    public void run() {
-        if(seconds > 0){
-            seconds--;
-        } else {
-            this.cancel();
-        }
-    }
-
-
     public static int[] convertSeconds(int totalSeconds) {
         int hours = totalSeconds / 3600;
         int minutes = (totalSeconds % 3600) / 60;
@@ -55,7 +45,12 @@ public class MyTimer extends TimerTask {
     }
 
     public void showTime(){
-        int[] convertedTime = convertSeconds(seconds);
+        Timer timer = new Timer();
+        DecrementTask dtask = new DecrementTask(seconds);
+
+        timer.schedule(dtask, 0, 1000);
+
+        int[] convertedTime = convertSeconds(dtask.getSeconds());
         System.out.printf("До выключения компьютера: %d часов %d минут %d секунд\n", convertedTime[0], convertedTime[1], convertedTime[2]);
     }
 }
