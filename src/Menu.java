@@ -13,9 +13,10 @@ public class Menu {
     public static void main(String[] args) {
         Menu menu = new Menu();
         menu.showStartMenu();
+        MyTimer timer = new MyTimer();        // Что-то тут надо придумать
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.out.println("Программа завершает свою работу");
-            menu.stopTimer();
+            menu.stopTimer(timer);
         }));
 
     }
@@ -94,16 +95,17 @@ public class Menu {
             } else if (choice == 3) {
                 showThirdMenu();
             }else if (choice == 4) {
-                startTimer();
+                startTimer(timer);
             }else if (choice == 5) {
-                stopTimer();
+                stopTimer(timer);
             }else if (choice == 6) {
                 timer.showTime();
             }else if (choice == 7) {
                 nullCurrentTime();
             }else if (choice == 0) {
                 System.out.println("Выход из программы");
-                stopTimer();
+                stopTimer(timer);
+                //Добавить выключение таймера
                 System.exit(0);
             } else {
                 System.out.println("Некорректный выбор, попробуйте снова.");
@@ -201,18 +203,17 @@ public class Menu {
         scanner.close();
     }
 
-    Timer timerUtill = new Timer();
-    MyTimer myT = new MyTimer();
-
-    public void startTimer(){
-        MyTimer timer = new MyTimer();
+    public void startTimer(MyTimer timer){
+        // Ссылки разные
         timer.cmdShutdownTimerStart(getTotalShutDownTimeMills() / 1000);
+        timer.setSeconds(getTotalShutDownTimeMills());
+        timer.scheduleTime();
     }
 
-    public void stopTimer(){
-        MyTimer timer = new MyTimer();
+    public void stopTimer(MyTimer timer){
+        // Это ссылки на разные таймеры, вот оно и не работает
         timer.cmdShutdownTimerCancel();
-        timerUtill.cancel();
+        timer.canclerSchedule();
     }
 
     public void nullCurrentTime(){
